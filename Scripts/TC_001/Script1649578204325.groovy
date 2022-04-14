@@ -1,13 +1,12 @@
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.chrome.ChromeDriver
-
-import com.kms.katalon.core.configuration.RunConfiguration
+import org.openqa.selenium.WebDriver as WebDriver
+import org.openqa.selenium.remote.RemoteWebDriver as RemoteWebDriver
+import org.openqa.selenium.support.events.EventFiringWebDriver as EventFiringWebDriver
+import com.kms.katalon.core.configuration.RunConfiguration as RunConfiguration
+import com.kms.katalon.core.webui.driver.DriverFactory as DriverFactory
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
-import com.relevantcodes.extentreports.ExtentReports
-import com.relevantcodes.extentreports.ExtentTest
-import com.relevantcodes.extentreports.LogStatus
-
-import io.github.bonigarcia.wdm.WebDriverManager
+import com.relevantcodes.extentreports.ExtentReports as ExtentReports
+import com.relevantcodes.extentreports.ExtentTest as ExtentTest
+import com.relevantcodes.extentreports.LogStatus as LogStatus
 
 String execID = RunConfiguration.getExecutionSourceName()
 
@@ -18,24 +17,23 @@ String tcID = 'Test Case 1'
 ExtentTest extentTest = CustomKeywords.'com.katalon.plugin.keyword.extentReport.Extent.startExtentTest'(tcID, 'Extent Test', 
     extent)
 
-//WebUI.openBrowser('')
-
 extentTest.log(LogStatus.INFO, 'Browser Launched')
 
-System.setProperty("webdriver.chrome.driver", "chrome_driver/chromedriver.exe");
+WebUI.openBrowser('')
 
-WebDriver driver = new ChromeDriver();
+WebDriver driver = DriverFactory.getWebDriver()
 
 String baseUrl = 'https://www.youtube.com'
 
-driver.get(baseUrl + '/')
+WebUI.navigateToUrl(baseUrl + '/')
 
-driver.manage().window().maximize()
+WebUI.maximizeWindow()
 
 extentTest.log(LogStatus.INFO, 'Navigated to www.google.com')
 
 // get title.
-String title = driver.getTitle()
+//String title = driver.getTitle()
+String title = WebUI.getWindowTitle()
 
 println(title)
 
@@ -56,4 +54,5 @@ driver.quit()
 
 extentTest.log(LogStatus.INFO, 'Browser closed')
 
-CustomKeywords.'com.katalon.plugin.keyword.extentReport.Extent.tearDownTest'(driver, extent, extentTest)
+CustomKeywords.'com.katalon.plugin.keyword.extentReport.Extent.tearDownTest'(((((driver) as EventFiringWebDriver).getWrappedDriver()) as RemoteWebDriver), 
+    extent, extentTest)
