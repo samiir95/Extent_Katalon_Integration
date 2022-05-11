@@ -1,25 +1,15 @@
 import org.openqa.selenium.WebDriver as WebDriver
 import org.openqa.selenium.remote.RemoteWebDriver as RemoteWebDriver
 import org.openqa.selenium.support.events.EventFiringWebDriver as EventFiringWebDriver
-import com.kms.katalon.core.configuration.RunConfiguration as RunConfiguration
-import com.kms.katalon.core.context.TestCaseContext as TestCaseContext
 import com.kms.katalon.core.webui.driver.DriverFactory as DriverFactory
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
-import com.relevantcodes.extentreports.ExtentReports as ExtentReports
 import com.relevantcodes.extentreports.ExtentTest as ExtentTest
 import com.relevantcodes.extentreports.LogStatus as LogStatus
+import general.ExtentReport as ExtentReport
 
-String execID = RunConfiguration.getExecutionSourceName()
+Map m = ExtentReport.extentSetup()
 
-ExtentReports extent = CustomKeywords.'com.katalon.plugin.keyword.extentReport.Extent.setupExtentReport'(execID)
-
-TestCaseContext testCaseContext;
-
-String tcID = RunConfiguration.getExecutionSource().toString().substring(RunConfiguration.getExecutionSource().toString().lastIndexOf("\\")+1)
-
-
-ExtentTest extentTest = CustomKeywords.'com.katalon.plugin.keyword.extentReport.Extent.startExtentTest'(tcID, 'Extent Test', 
-    extent)
+ExtentTest extentTest = m.get('extentTest')
 
 extentTest.log(LogStatus.INFO, 'Browser Launched')
 
@@ -48,7 +38,8 @@ extentTest.log(LogStatus.INFO, 'Get the WebSite title')
 if (title.equalsIgnoreCase('Google')) {
     extentTest.log(LogStatus.PASS, 'Title verified')
 } else {
-    String dest = CustomKeywords.'com.katalon.plugin.keyword.extentReport.Extent.getScreeshot'(driver, execID, tcID)
+    String dest = CustomKeywords.'com.katalon.plugin.keyword.extentReport.Extent.getScreeshot'(driver, m.get('execID'), 
+        m.get('tcID'))
 
     extentTest.log(LogStatus.FAIL, 'Error Snapshot : ' + extentTest.addScreenCapture(dest))
 }
@@ -59,4 +50,4 @@ driver.quit()
 extentTest.log(LogStatus.INFO, 'Browser closed')
 
 CustomKeywords.'com.katalon.plugin.keyword.extentReport.Extent.tearDownTest'(((((driver) as EventFiringWebDriver).getWrappedDriver()) as RemoteWebDriver), 
-    extent, extentTest)
+    m.get('extent'), extentTest)
