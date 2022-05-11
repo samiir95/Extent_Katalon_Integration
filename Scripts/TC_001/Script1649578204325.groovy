@@ -2,6 +2,7 @@ import org.openqa.selenium.WebDriver as WebDriver
 import org.openqa.selenium.remote.RemoteWebDriver as RemoteWebDriver
 import org.openqa.selenium.support.events.EventFiringWebDriver as EventFiringWebDriver
 import com.kms.katalon.core.configuration.RunConfiguration as RunConfiguration
+import com.kms.katalon.core.context.TestCaseContext as TestCaseContext
 import com.kms.katalon.core.webui.driver.DriverFactory as DriverFactory
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import com.relevantcodes.extentreports.ExtentReports as ExtentReports
@@ -12,7 +13,10 @@ String execID = RunConfiguration.getExecutionSourceName()
 
 ExtentReports extent = CustomKeywords.'com.katalon.plugin.keyword.extentReport.Extent.setupExtentReport'(execID)
 
-String tcID = 'Test Case 1'
+TestCaseContext testCaseContext;
+
+String tcID = RunConfiguration.getExecutionSource().toString().substring(RunConfiguration.getExecutionSource().toString().lastIndexOf("\\")+1)
+
 
 ExtentTest extentTest = CustomKeywords.'com.katalon.plugin.keyword.extentReport.Extent.startExtentTest'(tcID, 'Extent Test', 
     extent)
